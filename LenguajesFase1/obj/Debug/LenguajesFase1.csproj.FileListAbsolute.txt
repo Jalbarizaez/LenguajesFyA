@@ -1,0 +1,7 @@
+C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\bin\Debug\LenguajesFase1.exe.config
+C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\bin\Debug\LenguajesFase1.exe
+C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\bin\Debug\LenguajesFase1.pdb
+C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\obj\Debug\LenguajesFase1.csprojAssemblyReference.cache
+C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\obj\Debug\LenguajesFase1.csproj.CoreCompileInputs.cache
+C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\obj\Debug\LenguajesFase1.exe
+C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\obj\Debug\LenguajesFase1.pdb
