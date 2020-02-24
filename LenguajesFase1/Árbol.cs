@@ -8,16 +8,107 @@ namespace LenguajesFase1
 {
     class Árbol
     {
+
+        Nodo Arbol_Final = new Nodo();
         List<string> unario = new List<string>();// operadores unarios
         List<string> ex = new List<string>(); //Tokens
         List<string> st = new List<string>();// Simbolos terminales
         List<string> op = new List<string>();// operadores
         Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
         Stack<string> T = new Stack<string>();// Tokens llamada
-        private void CrearArbol()
+        static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
+        public List<string> Inorden = new List<string>();
+        public void in_orden()
         {
+            in_orden(S.Peek());
+            
+        }
+        private void in_orden(Nodo hoja)
+        {
+            if (hoja != null)
+            {
+                in_orden(hoja.Izquierdo);
+                Inorden.Add(hoja.id);
+                in_orden(hoja.Derecho);
+            }
+        }
+        public void crear(List<string> terminales)
+        {
+            operadores_Precedencia.Clear();
+            op.Clear();
+            S.Clear();
+            T.Clear();
+            st.Clear();
+            unario.Clear();
+            LlenarDiccionarioPrecedencia();
+            Llenar_op();
+            Llenar_unario();
+            Llenar_st(terminales);
+        }
+        private void LlenarDiccionarioPrecedencia()
+        {
+           operadores_Precedencia.Add("*", 1);
+           operadores_Precedencia.Add("+", 1);
+           operadores_Precedencia.Add("?", 1);
+           operadores_Precedencia.Add(".", 2);     
+           operadores_Precedencia.Add("|", 3);     
+        }
+        private void Llenar_st(List<string> llenar)
+        {
+            foreach (var item in llenar)
+            {
+                st.Add(item);
+            }
+        }
 
-            foreach(var item in ex)
+        private bool VerificarPrecedencia(string token)
+        {
+            if (operadores_Precedencia[token] < operadores_Precedencia[T.Peek()])
+            {
+                return true;
+            }
+            return false;
+        }
+        private void Llenar_unario()
+        {
+            unario.Add("*");
+            unario.Add("+");
+            unario.Add("?");
+        }
+        private void Llenar_op()
+        {
+            op.Add("*");
+            op.Add("+");
+            op.Add("?");
+            op.Add(".");
+            op.Add("|");
+        }
+        public void CrearArbol()
+        {
+            ex.Add("(");
+            ex.Add(" ");
+            ex.Add("*");
+            ex.Add(".");
+            ex.Add("ID");
+            ex.Add(".");
+            ex.Add(" ");
+            ex.Add("*");
+            ex.Add(".");
+            ex.Add("=");
+            ex.Add(".");
+            ex.Add(" ");
+            ex.Add("*");
+            ex.Add(".");
+            ex.Add("(");
+            ex.Add("V");
+            ex.Add("|");
+            ex.Add("N");
+            ex.Add(")");
+            ex.Add("+");
+            //ex.Add(".");
+            //ex.Add(" ");
+            ex.Add(")");
+            foreach (var item in ex)
             {
                 if(st.Contains(item))
                 {
@@ -27,6 +118,7 @@ namespace LenguajesFase1
                 else if(item =="(")
                 {
                     T.Push(item);
+
                 }
                 else if(item == ")")
                 {
@@ -34,10 +126,12 @@ namespace LenguajesFase1
                     {
                         if (T.Count == 0)
                         {
+                            break;
                             //Error
                         }
                         else if (S.Count < 2)
                         {
+                            break;
                             //Error
                         }
                         else
@@ -57,6 +151,7 @@ namespace LenguajesFase1
                         Nodo aux = new Nodo(item);
                         if(S.Count<0)
                         {
+                            break;
                             //Error
                         }
                         else
@@ -65,9 +160,20 @@ namespace LenguajesFase1
                             S.Push(aux);
                         }
                     }
-                    else if(T.Count >0 && T.Peek() != "(")// agregar condicion de precedencia de token es menor a último op en T
+                    else if(T.Count >0 && T.Peek() != "("&& VerificarPrecedencia(item))
                     {
-
+                        Nodo temp = new Nodo(T.Pop());
+                        if (S.Count < 2)
+                        {
+                            break;
+                            //error   
+                        }
+                        else
+                        {
+                            temp.Derecho = S.Pop();
+                            temp.Izquierdo = S.Pop();
+                            S.Push(temp);
+                        }
                     }
                     else if(unario.Contains(item)== false)
                     {
@@ -76,9 +182,11 @@ namespace LenguajesFase1
                 }
                 else
                 {
+                    break;
                     //Error
                 }
             }
+            in_orden();
 
         }
     }

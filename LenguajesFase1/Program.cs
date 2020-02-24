@@ -17,6 +17,17 @@ namespace LenguajesFase1
         {
             //foreach (var arg in args)
             //{
+
+            List<string> terminalesSets = new List<string>();
+            terminalesSets.Add("ID");
+            terminalesSets.Add("="); 
+            terminalesSets.Add(" ");
+            terminalesSets.Add("V");
+            terminalesSets.Add("N");
+            Árbol sets = new Árbol();
+            sets.crear(terminalesSets);
+            sets.CrearArbol();
+
                 int linea_Archivo = 0;
                 int Validacion = 0;
                 bool Error = false;

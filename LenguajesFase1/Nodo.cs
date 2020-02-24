@@ -21,7 +21,11 @@ namespace LenguajesFase1
                 this.Derecho = null;
                 this.Padre = null;
             }
-            public Nodo(string identificador, Nodo izquierdo, Nodo derecho, Nodo padre)
+            public Nodo()
+            {
+          
+            }
+        public Nodo(string identificador, Nodo izquierdo, Nodo derecho, Nodo padre)
             {
                 this.id = identificador;
                 this.Izquierdo = izquierdo;
