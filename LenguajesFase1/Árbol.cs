@@ -10,11 +10,11 @@ namespace LenguajesFase1
     {
 
         Nodo Arbol_Final = new Nodo();
-        List<string> unario = new List<string>();// operadores unarios
-        List<string> ex = new List<string>(); //Tokens
-        List<string> st = new List<string>();// Simbolos terminales
-        List<string> op = new List<string>();// operadores
-        Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
+        static List<string> unario = new List<string>();// operadores unarios
+        static Queue<string> ex = new Queue<string>(); //Tokens
+        static List<string> st = new List<string>();// Simbolos terminales
+        static List<string> nounario = new List<string>();// operadores no unarios
+        static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
         static Stack<string> T = new Stack<string>();// Tokens llamada
         static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
         public List<string> Inorden = new List<string>();
@@ -35,7 +35,7 @@ namespace LenguajesFase1
         public void crear(List<string> terminales)
         {
             operadores_Precedencia.Clear();
-            op.Clear();
+            nounario.Clear();
             S.Clear();
             T.Clear();
             st.Clear();
@@ -47,11 +47,9 @@ namespace LenguajesFase1
         }
         private void LlenarDiccionarioPrecedencia()
         {
-            operadores_Precedencia.Add("*", 1);
-            operadores_Precedencia.Add("+", 1);
-            operadores_Precedencia.Add("?", 1);
+            operadores_Precedencia.Add("*", 3);
             operadores_Precedencia.Add(".", 2);
-            operadores_Precedencia.Add("|", 3);
+            operadores_Precedencia.Add("|", 1);
         }
         private void Llenar_st(List<string> llenar)
         {
@@ -60,24 +58,24 @@ namespace LenguajesFase1
                 st.Add(item);
             }
         }
-        public static string Devolver_TopOp(List<string> operadores)
-        {
-            foreach (var item in T)
-            {
-                if (operadores.Contains(item))
-                {
-                    return item;
-                }
-            }
-            return "0";
-        }
         private bool VerificarPrecedencia(string token)
         {
-            if (operadores_Precedencia[token] >= operadores_Precedencia[Devolver_TopOp(op)])
+            if (token == "*")
+                return false;
+            else if (operadores_Precedencia[token] <= operadores_Precedencia[T.Peek()])
             {
                 return true;
             }
             return false;
+            //if (token == "*")
+            //    return false;
+            //else if (token == "." && T.Peek() == "*")
+            //    return true;
+            //else if (token == "|" && (T.Peek() == "*" || T.Peek() == "."))
+            //    return  true;
+            //else if (token == T.Peek())
+            //    return true;
+            //return false;
         }
         private void Llenar_unario()
         {
@@ -87,37 +85,39 @@ namespace LenguajesFase1
         }
         private void Llenar_op()
         {
-            op.Add("*");
-            op.Add("+");
-            op.Add("?");
-            op.Add(".");
-            op.Add("|");
+            //op.Add("*");
+            //op.Add("+");
+            //op.Add("?");
+            nounario.Add(".");
+            nounario.Add("|");
+            nounario.Add(")");
+            nounario.Add("(");
         }
         public void CrearArbol()
         {
-            ex.Add("(");
-            ex.Add(" ");
-            ex.Add("*");
-            ex.Add(".");
-            ex.Add("ID");
-            ex.Add(".");
-            ex.Add(" ");
-            ex.Add("*");
-            ex.Add(".");
-            ex.Add("=");
-            ex.Add(".");
-            ex.Add(" ");
-            ex.Add("*");
-            ex.Add(".");
-            ex.Add("(");
-            ex.Add("V");
-            ex.Add("|");
-            ex.Add("N");
-            ex.Add(")");
-            ex.Add("+");
-            ex.Add(".");
-            ex.Add(" ");
-            ex.Add(")");
+            ex.Enqueue("(");
+            ex.Enqueue(" ");
+            ex.Enqueue("*");
+            ex.Enqueue(".");
+            ex.Enqueue("ID");
+            ex.Enqueue(".");
+            ex.Enqueue(" ");
+            //ex.Enqueue("*");
+            //ex.Enqueue(".");
+            //ex.Enqueue("=");
+            //ex.Enqueue(".");
+            //ex.Enqueue(" ");
+            //ex.Enqueue("*");
+            //ex.Enqueue(".");
+            //ex.Enqueue("(");
+            //ex.Enqueue("V");
+            //ex.Enqueue("|");
+            //ex.Enqueue("N");
+            //ex.Enqueue(")");
+            //ex.Enqueue("+");
+            //ex.Enqueue(".");
+            //ex.Enqueue(" ");
+            ex.Enqueue(")");
             foreach (var item in ex)
             {
                 if (st.Contains(item))
@@ -154,7 +154,7 @@ namespace LenguajesFase1
                     }
                     T.Pop();
                 }
-                else if (op.Contains(item))
+                else if (unario.Contains(item)||nounario.Contains(item))
                 {
                     if (unario.Contains(item))
                     {
@@ -170,7 +170,7 @@ namespace LenguajesFase1
                             S.Push(aux);
                         }
                     }
-                    else if (T.Count > 0 && T.Peek() != "(" && VerificarPrecedencia(item) != true)
+                    else if (T.Count > 0 && T.Peek() != "(" && (VerificarPrecedencia(item)) )
                     {
                         Nodo temp = new Nodo(T.Pop());
                         if (S.Count < 2)
@@ -185,7 +185,7 @@ namespace LenguajesFase1
                             S.Push(temp);
                         }
                     }
-                    else if (unario.Contains(item) == false)
+                     if (unario.Contains(item) == false)
                     {
                         T.Push(item);
                     }
@@ -195,7 +195,14 @@ namespace LenguajesFase1
                     break;
                     //Error
                 }
+               
             }
+            Nodo Nodofinal = new Nodo();
+            Nodo derecho = new Nodo();
+            derecho.id = "#";
+            Nodofinal.id = ".";
+            Nodofinal.Izquierdo = S.Pop();
+            Nodofinal.Derecho = derecho;
             in_orden();
 
         }

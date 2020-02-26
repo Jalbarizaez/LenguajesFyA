@@ -17,7 +17,8 @@ namespace LenguajesFase1
         {
             //foreach (var arg in args)
             //{
-
+            Arbol_ER x = new Arbol_ER();
+            x.Arbol();
             List<string> terminalesSets = new List<string>();
             terminalesSets.Add("ID");
             terminalesSets.Add("="); 
