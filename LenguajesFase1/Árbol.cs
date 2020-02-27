@@ -9,9 +9,9 @@ namespace LenguajesFase1
     class Árbol
     {
 
-        Nodo Arbol_Final = new Nodo();
+        public static Nodo Arbol_Final = new Nodo(".");
         static List<string> unario = new List<string>();// operadores unarios
-        static Queue<string> ex = new Queue<string>(); //Tokens
+        static List<string> ex = new List<string>(); //Tokens
         static List<string> st = new List<string>();// Simbolos terminales
         static List<string> nounario = new List<string>();// operadores no unarios
         static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
@@ -20,7 +20,7 @@ namespace LenguajesFase1
         public List<string> Inorden = new List<string>();
         public void in_orden()
         {
-            in_orden(S.Peek());
+            in_orden(Arbol_Final);
 
         }
         private void in_orden(Nodo hoja)
@@ -32,8 +32,9 @@ namespace LenguajesFase1
                 in_orden(hoja.Derecho);
             }
         }
-        public void crear(List<string> terminales)
+        public void crear(string expresion)
         {
+            ex.Clear();
             operadores_Precedencia.Clear();
             nounario.Clear();
             S.Clear();
@@ -43,7 +44,55 @@ namespace LenguajesFase1
             LlenarDiccionarioPrecedencia();
             Llenar_op();
             Llenar_unario();
-            Llenar_st(terminales);
+            terminales(expresion);
+            Crear_expresion(expresion);
+
+        }
+        private void Crear_expresion(string expresion)
+        {
+            for (int i = 0; i < expresion.Length; i++)
+            {
+                if (expresion[i] == '<')
+                {
+                    string token = "";
+                    while (expresion[i] != '>')
+                    {
+                        token += expresion[i];
+                        i++;
+                    }
+                    token = token + ">";
+                    ex.Add(token);
+                }
+                else if (expresion[i] == '/')
+                {
+                    ex.Add(expresion[i].ToString() + expresion[i + 1].ToString());
+                    i++;
+                }
+                else
+                    ex.Add(expresion[i].ToString());
+            }
+
+        }
+        private void terminales(string expresion)
+        {
+            
+            for (int i = 0; i < expresion.Length; i++)
+            {
+                if (expresion[i] == '<')
+                {
+                    string token = "";
+                    while (expresion[i] != '>')
+                    {
+                        token += expresion[i];
+                        i++;
+                    }
+                    token = token + ">";
+                    if (st.Contains(token) == false)
+                        st.Add(token);
+            
+                }
+            }
+           
         }
         private void LlenarDiccionarioPrecedencia()
         {
@@ -67,15 +116,6 @@ namespace LenguajesFase1
                 return true;
             }
             return false;
-            //if (token == "*")
-            //    return false;
-            //else if (token == "." && T.Peek() == "*")
-            //    return true;
-            //else if (token == "|" && (T.Peek() == "*" || T.Peek() == "."))
-            //    return  true;
-            //else if (token == T.Peek())
-            //    return true;
-            //return false;
         }
         private void Llenar_unario()
         {
@@ -85,9 +125,7 @@ namespace LenguajesFase1
         }
         private void Llenar_op()
         {
-            //op.Add("*");
-            //op.Add("+");
-            //op.Add("?");
+
             nounario.Add(".");
             nounario.Add("|");
             nounario.Add(")");
@@ -95,29 +133,7 @@ namespace LenguajesFase1
         }
         public void CrearArbol()
         {
-            ex.Enqueue("(");
-            ex.Enqueue(" ");
-            ex.Enqueue("*");
-            ex.Enqueue(".");
-            ex.Enqueue("ID");
-            ex.Enqueue(".");
-            ex.Enqueue(" ");
-            //ex.Enqueue("*");
-            //ex.Enqueue(".");
-            //ex.Enqueue("=");
-            //ex.Enqueue(".");
-            //ex.Enqueue(" ");
-            //ex.Enqueue("*");
-            //ex.Enqueue(".");
-            //ex.Enqueue("(");
-            //ex.Enqueue("V");
-            //ex.Enqueue("|");
-            //ex.Enqueue("N");
-            //ex.Enqueue(")");
-            //ex.Enqueue("+");
-            //ex.Enqueue(".");
-            //ex.Enqueue(" ");
-            ex.Enqueue(")");
+            
             foreach (var item in ex)
             {
                 if (st.Contains(item))
@@ -197,12 +213,10 @@ namespace LenguajesFase1
                 }
                
             }
-            Nodo Nodofinal = new Nodo();
-            Nodo derecho = new Nodo();
-            derecho.id = "#";
-            Nodofinal.id = ".";
-            Nodofinal.Izquierdo = S.Pop();
-            Nodofinal.Derecho = derecho;
+            Nodo auxiliar = new Nodo();
+            auxiliar.id = "#";
+            Arbol_Final.Izquierdo = S.Pop();
+            Arbol_Final.Derecho = auxiliar;
             in_orden();
 
         }

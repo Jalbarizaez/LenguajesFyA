@@ -17,24 +17,23 @@ namespace LenguajesFase1
         {
             //foreach (var arg in args)
             //{
-            Arbol_ER x = new Arbol_ER();
-            x.Arbol();
-            List<string> terminalesSets = new List<string>();
-            terminalesSets.Add("ID");
-            terminalesSets.Add("="); 
-            terminalesSets.Add(" ");
-            terminalesSets.Add("V");
-            terminalesSets.Add("N");
-            Árbol sets = new Árbol();
-            sets.crear(terminalesSets);
-            sets.CrearArbol();
+
+
+                Árbol Comparar = new Árbol();
+            //sets.crear("(< >*.<ID>.< >*.<=>.< >*.((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)).((<..>|<+>).(<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>))+)");
+            //sets.CrearArbol();
+
+            //Árbol tokens = new Árbol();
+            //tokens.crear("(< >*.<TOKEN>.< >*.<D>.< >*.<=>.< >*.((<'>.<C>.<'>)|<ID>|<|>|<(>|<)>|<*>|<{>|<}>)+)");
+            //tokens.CrearArbol();
+
 
                 int linea_Archivo = 0;
                 int Validacion = 0;
                 bool Error = false;
                 string Error_tipo = "";
                 int Contador = 0;
-                string URL = @"C:\Users\jealb\OneDrive\Escritorio\Prueba.txt";
+                string URL =  @"C:\Users\jealb\OneDrive\Escritorio\Prueba.txt";
                 using (StreamReader lector = new StreamReader(URL))
                 {
                     while (lector.Peek() > -1)
@@ -49,6 +48,8 @@ namespace LenguajesFase1
                                 case 0:
                                     if(linea == "SETS")
                                     {
+                                        Comparar.crear("(< >*.<ID>.< >*.<=>.< >*.((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)).((<..>|<+>).(<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>))+)");
+                                        Comparar.CrearArbol();
                                         Validacion++;
                                     }
                                     else
@@ -69,6 +70,8 @@ namespace LenguajesFase1
                                         {
                                             if (linea =="TOKENS")
                                             {
+                                                Comparar.crear("(< >*.<TOKEN>.< >*.<D>.< >*.<=>.< >*.((<'>.<C>.<'>)|<ID>|<|>|<(>|<)>|<*>|<{>|<}>)+)");
+                                                Comparar.CrearArbol();
                                                 Validacion++;
                                                 Contador = 0;
                                         }
