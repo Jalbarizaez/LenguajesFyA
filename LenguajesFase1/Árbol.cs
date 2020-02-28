@@ -12,7 +12,7 @@ namespace LenguajesFase1
         public static Nodo Arbol_Final = new Nodo(".");
         static List<string> unario = new List<string>();// operadores unarios
         static List<string> ex = new List<string>(); //Tokens
-        static List<string> st = new List<string>();// Simbolos terminales
+        public static List<string> st = new List<string>();// Simbolos terminales
         static List<string> nounario = new List<string>();// operadores no unarios
         static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
         static Stack<string> T = new Stack<string>();// Tokens llamada
@@ -218,7 +218,6 @@ namespace LenguajesFase1
             Arbol_Final.Izquierdo = S.Pop();
             Arbol_Final.Derecho = auxiliar;
             in_orden();
-
         }
 
     }

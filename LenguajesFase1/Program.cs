@@ -9,7 +9,172 @@ namespace LenguajesFase1
 {
     class Expresiones
     {
+        public List<string> TokenSets(string Expresion)
+        {
+            int contador = 0;
+            List<string> expresion = new List<string>();
+            for (int i = 0; i < Expresion.Length; i++)
+            {
+                if (Expresion[i] == ' ')
+                {
+                    expresion.Add("<" + " " + ">");
+                }
+                else if (Expresion[i] == '.' && Expresion[i + 1] == '.')
+                {
+                    i++;
+                    expresion.Add("<" + ".." + ">");
+                }
+                else if (Expresion[i] == 'C' && Expresion[i + 1] == 'H' && Expresion[i + 2] == 'R')
+                {
+                    i = i + 2;
+                    expresion.Add("<CHR>");
+                    if (Expresion[i + 1] == '(')
+                    {
+                        i = i+2;
+                        expresion.Add("<(>");
+                        string aux = "";
+                        while (Expresion[i] != ')')
+                        {
+                            aux = aux + Expresion[i];
+                            i++;
+                            
+                        }
+                        
+                        try
+                        {
+                            var evaluar = Convert.ToInt16(aux);
+                            expresion.Add("<N>");
 
+                        }
+                        catch { }
+                        if (Expresion[i] == ')')
+                            expresion.Add("<)>");
+                    }
+                }
+                else if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) <91 )
+                {
+                    contador++;
+                    while (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                    {
+                        i++;
+                    }
+                    i--;
+                    expresion.Add("<" + "ID" + ">");
+                }
+                else if (Expresion[i] == Convert.ToChar("'"))
+                {
+                    expresion.Add("<'>");
+                    if (i + 1 != Expresion.Length)
+                    {
+                        if (Expresion[i + 1] != ' ' || Expresion[i + 1] != Convert.ToChar("'"))
+                        {
+                            expresion.Add("<" + "C" + ">");
+                            i++;
+                        }
+                        if(Expresion[i + 1] == Convert.ToChar("'"))
+                        {
+                            expresion.Add("<'>");
+                            i++;
+                        }
+                       
+                    }
+                }
+                else if (Expresion[i] == '+')
+                {
+                    expresion.Add("<+>");
+
+                }
+                else if (Expresion[i] == '=')
+                {
+                    expresion.Add("<=>");
+
+                }
+            }
+            return expresion;
+        }
+        public List<string> TokenTokens(string Expresion)
+        {
+            
+            List<string> expresion = new List<string>();
+            for (int i = 0; i < Expresion.Length; i++)
+            {
+                if (Expresion[i] == ' ')
+                {
+                    expresion.Add("<" + " " + ">");
+                }
+                else if (Expresion[i] == '.' && Expresion[i + 1] == '.')
+                {
+                    i++;
+                    expresion.Add("<" + ".." + ">");
+                }
+                else if (Expresion[i] == 'C' && Expresion[i + 1] == 'H' && Expresion[i + 2] == 'R')
+                {
+                    i = i + 2;
+                    expresion.Add("<CHR>");
+                    if (Expresion[i + 1] == '(')
+                    {
+                        i = i + 2;
+                        expresion.Add("<(>");
+                        string aux = "";
+                        while (Expresion[i] != ')')
+                        {
+                            aux = aux + Expresion[i];
+                            i++;
+
+                        }
+
+                        try
+                        {
+                            var evaluar = Convert.ToInt16(aux);
+                            expresion.Add("<N>");
+
+                        }
+                        catch { }
+                        if (Expresion[i] == ')')
+                            expresion.Add("<)>");
+                    }
+                }
+                else if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                {
+                   
+                    while (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                    {
+                        i++;
+                    }
+                    i--;
+                    expresion.Add("<" + "ID" + ">");
+                }
+                else if (Expresion[i] == Convert.ToChar("'"))
+                {
+                    expresion.Add("<'>");
+                    if (i + 1 != Expresion.Length)
+                    {
+                        if (Expresion[i + 1] != ' ' || Expresion[i + 1] != Convert.ToChar("'"))
+                        {
+                            expresion.Add("<" + "C" + ">");
+                            i++;
+                        }
+                        if (Expresion[i + 1] == Convert.ToChar("'"))
+                        {
+                            expresion.Add("<'>");
+                            i++;
+                        }
+
+                    }
+                }
+                else if (Expresion[i] == '+')
+                {
+                    expresion.Add("<+>");
+
+                }
+                else if (Expresion[i] == '=')
+                {
+                    expresion.Add("<=>");
+
+                }
+            }
+            return expresion;
+        }
     }
     class Program
     {
@@ -20,14 +185,6 @@ namespace LenguajesFase1
 
 
                 Árbol Comparar = new Árbol();
-            //sets.crear("(< >*.<ID>.< >*.<=>.< >*.((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)).((<..>|<+>).(<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>))+)");
-            //sets.CrearArbol();
-
-            //Árbol tokens = new Árbol();
-            //tokens.crear("(< >*.<TOKEN>.< >*.<D>.< >*.<=>.< >*.((<'>.<C>.<'>)|<ID>|<|>|<(>|<)>|<*>|<{>|<}>)+)");
-            //tokens.CrearArbol();
-
-
                 int linea_Archivo = 0;
                 int Validacion = 0;
                 bool Error = false;
@@ -48,7 +205,7 @@ namespace LenguajesFase1
                                 case 0:
                                     if(linea == "SETS")
                                     {
-                                        Comparar.crear("(< >*.<ID>.< >*.<=>.< >*.((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)).((<..>|<+>).(<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>))+)");
+                                        Comparar.crear("(< >*.<ID>.< >*.<=>.< >*.((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)).((<..>|<+>).((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)))*)");
                                         Comparar.CrearArbol();
                                         Validacion++;
                                     }
@@ -61,8 +218,10 @@ namespace LenguajesFase1
                                 case 1:
                                     if(linea.Contains("TOKEN")==false)
                                     {
-                                       
-                                        Contador++;
+                                    Expresiones evaluar = new Expresiones();
+                                    var comp = evaluar.TokenSets(linea.Trim('\t'));
+
+                                    Contador++;
                                     }
                                     else
                                     {
@@ -70,6 +229,7 @@ namespace LenguajesFase1
                                         {
                                             if (linea =="TOKENS")
                                             {
+                                            
                                                 Comparar.crear("(< >*.<TOKEN>.< >*.<D>.< >*.<=>.< >*.((<'>.<C>.<'>)|<ID>|<|>|<(>|<)>|<*>|<{>|<}>)+)");
                                                 Comparar.CrearArbol();
                                                 Validacion++;
@@ -139,6 +299,8 @@ namespace LenguajesFase1
                 }
                 Console.ReadKey();
             }
-        }
+     
+
     }
+}
 //}
