@@ -18,18 +18,44 @@ namespace LenguajesFase1
         static Stack<string> T = new Stack<string>();// Tokens llamada
         static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
         public List<string> Inorden = new List<string>();
-        public void in_orden()
+        public void in_orden(List<string> linea)
         {
-            in_orden(Arbol_Final);
+            int contador = 0;
+            in_orden(Arbol_Final,linea,contador);
 
         }
-        private void in_orden(Nodo hoja)
+        private void in_orden(Nodo raiz, List<string> linea,int contador)
         {
-            if (hoja != null)
+            if (/*raiz.EsHoja()*/raiz!=null)
             {
-                in_orden(hoja.Izquierdo);
-                Inorden.Add(hoja.id);
-                in_orden(hoja.Derecho);
+                in_orden(raiz.Izquierdo,linea,contador);
+                
+               
+              
+                 switch(raiz.id)
+                {
+                    case "+":
+                        if(st.Contains(raiz.Izquierdo.id))
+                        {
+                            var aux = st.Find(x => raiz.id == x);
+                            if(raiz.Izquierdo.id == linea[contador])
+                            {
+
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                        break;
+                    case "*":
+                        break;
+                    case "|":
+                        break;
+                   
+                }
+                
+                in_orden(raiz.Derecho,linea,contador);
             }
         }
         public void crear(string expresion)
@@ -162,9 +188,13 @@ namespace LenguajesFase1
                         }
                         else
                         {
-                            Nodo temp = new Nodo(T.Pop());
-                            temp.Derecho = S.Pop();
-                            temp.Izquierdo = S.Pop();
+                            Nodo temp = new Nodo(T.Pop());//padre
+                            var hijo1 = S.Pop();
+                            temp.Derecho = hijo1;
+                            hijo1.Padre = temp;
+                            var hijo2 = S.Pop();
+                            hijo2.Padre = temp;
+                            temp.Izquierdo = hijo2;
                             S.Push(temp);
                         }
                     }
@@ -182,7 +212,9 @@ namespace LenguajesFase1
                         }
                         else
                         {
-                            aux.Izquierdo = S.Pop();
+                            var hijo1 = S.Pop();
+                            aux.Izquierdo = hijo1;
+                            hijo1.Padre = aux;
                             S.Push(aux);
                         }
                     }
@@ -196,8 +228,12 @@ namespace LenguajesFase1
                         }
                         else
                         {
-                            temp.Derecho = S.Pop();
-                            temp.Izquierdo = S.Pop();
+                            var hijo1 = S.Pop();
+                            temp.Derecho = hijo1;
+                            hijo1.Padre = temp;
+                            var hijo2 = S.Pop();
+                            hijo2.Padre = temp;
+                            temp.Izquierdo = hijo2;
                             S.Push(temp);
                         }
                     }
@@ -215,9 +251,12 @@ namespace LenguajesFase1
             }
             Nodo auxiliar = new Nodo();
             auxiliar.id = "#";
-            Arbol_Final.Izquierdo = S.Pop();
+            auxiliar.Padre = Arbol_Final;
+            var hijo = S.Pop();
+            hijo.Padre = Arbol_Final;
+            Arbol_Final.Izquierdo = hijo;
             Arbol_Final.Derecho = auxiliar;
-            in_orden();
+
         }
 
     }
