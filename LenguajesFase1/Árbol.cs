@@ -17,45 +17,24 @@ namespace LenguajesFase1
         static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
         static Stack<string> T = new Stack<string>();// Tokens llamada
         static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
-        public List<string> Inorden = new List<string>();
-        public void in_orden(List<string> linea)
+        public Queue<string> Inorden = new Queue<string>();
+        public void in_orden()
         {
-            int contador = 0;
-            in_orden(Arbol_Final,linea,contador);
+            ;
+            in_orden(Arbol_Final);
 
         }
-        private void in_orden(Nodo raiz, List<string> linea,int contador)
+        private void in_orden(Nodo raiz)
         {
-            if (/*raiz.EsHoja()*/raiz!=null)
+                if (/*raiz.EsHoja()*/raiz!=null)
             {
-                in_orden(raiz.Izquierdo,linea,contador);
-                
-               
-              
-                 switch(raiz.id)
-                {
-                    case "+":
-                        if(st.Contains(raiz.Izquierdo.id))
-                        {
-                            var aux = st.Find(x => raiz.id == x);
-                            if(raiz.Izquierdo.id == linea[contador])
-                            {
+                in_orden(raiz.Izquierdo);
 
-                            }
-                        }
-                        else
-                        {
 
-                        }
-                        break;
-                    case "*":
-                        break;
-                    case "|":
-                        break;
-                   
-                }
+                Inorden.Enqueue(raiz.id);
                 
-                in_orden(raiz.Derecho,linea,contador);
+                
+                in_orden(raiz.Derecho);
             }
         }
         public void crear(string expresion)
@@ -256,7 +235,7 @@ namespace LenguajesFase1
             hijo.Padre = Arbol_Final;
             Arbol_Final.Izquierdo = hijo;
             Arbol_Final.Derecho = auxiliar;
-
+            in_orden();
         }
 
     }
