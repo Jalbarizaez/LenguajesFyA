@@ -194,6 +194,11 @@ namespace LenguajesFase1
                         expresion.Add("<*>");
 
                     }
+                    else if (Expresion[i] == '?')
+                    {
+                        expresion.Add("<?>");
+
+                    }
                     else if (Expresion[i] == '|')
                     {
                         if (char.IsUpper(Expresion[i+1]) || Expresion[i+1] == Convert.ToChar("'") || Expresion[i+1] == ' ')
@@ -338,14 +343,26 @@ namespace LenguajesFase1
                         {
                             i++;
                         }
-
+                        
                         expresion.Add("<" + "N" + ">");
+                        if(Convert.ToInt16(Convert.ToByte(Expresion[i])) > 47 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 58)
+                        {
+
+                        }
+                        else
+
+                        {
+                            expresion.Add("<" + "C" + ">");
+                        }
+
+
                     }
                     else if (Expresion[i] != ' ')
                         expresion.Add("<" + "C" + ">");
                     
 
                 }
+
                 return expresion;
             }
             catch
@@ -394,10 +411,10 @@ namespace LenguajesFase1
 
             foreach (var arg in args)
             {
+                try {
 
 
-
-                Árbol Comparar = new Árbol();
+                    Árbol Comparar = new Árbol();
                     int linea_Archivo = 0;
                     int contadorErrores = 0;
                     int Validacion = 0;
@@ -405,9 +422,9 @@ namespace LenguajesFase1
                     string Error_tipo = "";
                     int Contador = 0;
                     int totalActions = 0;
-                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\Prueba1.txt";
+                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\Prueba14.txt";
                     int contadorActions = 0;
-                    using (StreamReader lector = new StreamReader(@arg))
+                    using (StreamReader lector = new StreamReader(arg))
                     {
                         while (lector.Peek() > -1)
                         {
@@ -443,12 +460,12 @@ namespace LenguajesFase1
                                         {
                                             Expresiones evaluar = new Expresiones();
                                             var comp = evaluar.TokenSets(linea);
-                                    if (comp == null)
-                                    {
-                                        Error_tipo = "Error en la sintaxis de linea";
-                                        Error = true;
-                                    }
-                                    Contador++;
+                                            if (comp == null)
+                                            {
+                                                Error_tipo = "Error en la sintaxis de linea";
+                                                Error = true;
+                                            }
+                                            Contador++;
                                         }
                                         else
                                         {
@@ -480,13 +497,13 @@ namespace LenguajesFase1
                                         if (linea.Contains("TOKEN"))
                                         {
                                             Expresiones evaluar = new Expresiones();
-                                            var comp = evaluar.TokenTokens(linea.Replace('\t',' '));
-                                        if (comp == null )
-                                        {
-                                            Error_tipo = "Error en la sintaxis de linea";
-                                            Error = true;
-                                        }
-                                        Contador++;
+                                            var comp = evaluar.TokenTokens(linea.Replace('\t', ' '));
+                                            if (comp == null)
+                                            {
+                                                Error_tipo = "Error en la sintaxis de linea";
+                                                Error = true;
+                                            }
+                                            Contador++;
                                         }
                                         else
                                         {
@@ -500,8 +517,8 @@ namespace LenguajesFase1
                                                     Validacion++;
                                                     Contador = 0;
                                                 }
-                                                else if(linea =="")
-                                        { }
+                                                else if (linea == "")
+                                                { }
                                                 else
                                                 {
                                                     Error_tipo = "La linea de comando 'ACTIONS' no se encuentra o error al definir token";
@@ -521,13 +538,13 @@ namespace LenguajesFase1
                                         if (contadorActions == 0)
                                         {
                                             Expresiones actions = new Expresiones();
-                                            if (actions.analizarActions(linea.Trim(' ')) && totalActions == 0&& linea.Trim(' ') =="RESERVADAS()")
+                                            if (actions.analizarActions(linea.Trim(' ')) && totalActions == 0 && linea.Trim(' ') == "RESERVADAS()")
                                             {
                                                 contadorActions++;
                                             }
                                             else if (totalActions > 0)
                                             {
-                                                if (actions.analizarActions(linea))
+                                                if (actions.analizarActions(linea.Trim(' ')))
                                                 {
                                                     contadorActions++;
                                                 }
@@ -546,12 +563,12 @@ namespace LenguajesFase1
                                                     contadorErrores++;
                                                     Contador++;
                                                 }
-                                        else if(actions.analizarActions(linea) == false)
-                                        {
-                                            Error_tipo = "Action definida incorrectamente ";
-                                            Error = true;
-                                        }
-                                    }
+                                                else if (actions.analizarActions(linea) == false)
+                                                {
+                                                    Error_tipo = "Action definida incorrectamente ";
+                                                    Error = true;
+                                                }
+                                            }
 
                                             else
                                             {
@@ -587,11 +604,11 @@ namespace LenguajesFase1
                                                     contadorActions = 0;
                                                 }
                                             }
-                                        else if (linea == ""|| linea == " "|| linea == "\t")
-                                        {
+                                            else if (linea == "" || linea == " " || linea == "\t")
+                                            {
 
-                                         }
-                                     else if (linea.Contains("ERROR") == false)
+                                            }
+                                            else if (linea.Contains("ERROR") == false)
                                             {
                                                 Expresiones evaluar = new Expresiones();
                                                 var comp = evaluar.TokenActions(linea);
@@ -603,7 +620,7 @@ namespace LenguajesFase1
 
                                                 Contador++;
                                             }
-                        
+
                                             else
                                             {
                                                 Error_tipo = "Error en final de Action <}>";
@@ -650,7 +667,7 @@ namespace LenguajesFase1
                             }
 
                         }
-                        if (totalActions > 0 && contadorErrores == 0&& Error != true)
+                        if (totalActions > 0 && contadorErrores == 0 && Error != true)
                         {
 
                             Error = true;
@@ -673,6 +690,11 @@ namespace LenguajesFase1
 
 
                     }
+                }
+                catch
+                { Console.WriteLine("Archvio incorrecto");
+                    Console.ReadKey();
+                }
                 }
             
     }
