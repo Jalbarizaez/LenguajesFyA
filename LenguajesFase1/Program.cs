@@ -9,7 +9,7 @@ namespace LenguajesFase1
 {
     class Expresiones
     {
-        public List<string> TokenSets(string Expresion)
+        public List<string> TokenSets(string Expresion)// Metodo encargado de convertir a tokens los sets
         {
             int contador = 0;
             List<string> expresion = new List<string>();
@@ -107,7 +107,7 @@ namespace LenguajesFase1
                         expresion.Add("<=>");
 
                     }
-                    else if (Expresion[i] != ' ')
+                    else if (Expresion[i] != ' ' && Expresion[i] != Convert.ToChar("\t"))
                     {
                         int x = Convert.ToInt16("W");
 
@@ -118,97 +118,152 @@ namespace LenguajesFase1
             }
             catch { return null; }
         }
-        public List<string> TokenTokens(string Expresion)
+        public List<string> TokenTokens(string Expresion)// Metodo encargado de convertir a tokens los tokens
         {
 
             List<string> expresion = new List<string>();
-            for (int i = 0; i < Expresion.Length; i++)
+            try
             {
-                if (Expresion[i] == 'T' && Expresion[i + 1] == 'O' && Expresion[i + 2] == 'K' && Expresion[i + 3] == 'E' && Expresion[i + 4] == 'N')
+                for (int i = 0; i < Expresion.Length; i++)
                 {
-                    i = i + 4;
-                    expresion.Add("<" + "TOKEN" + ">");
-                }
-                else if (Expresion[i] == Convert.ToChar("'"))
-                {
-                    expresion.Add("<'>");
-                    if (i + 1 != Expresion.Length)
-                    {
-                        if (Expresion[i + 1] != ' ' || Expresion[i + 1] != Convert.ToChar("'"))
+                    if (Expresion[i] == 'T' && Expresion[i + 1] == 'O')
+                    { if (Expresion[i] == 'T' && Expresion[i + 1] == 'O' && Expresion[i + 2] == 'K' && Expresion[i + 3] == 'E' && Expresion[i + 4] == 'N')
                         {
-                            expresion.Add("<" + "C" + ">");
+                            i = i + 4;
+                            expresion.Add("<" + "TOKEN" + ">");
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    else if (Expresion[i] == Convert.ToChar("'"))
+                    {
+                        expresion.Add("<'>");
+                        if (i + 1 != Expresion.Length)
+                        {
+                            if (Expresion[i + 1] != ' ' || Expresion[i + 1] != Convert.ToChar("'"))
+                            {
+                                expresion.Add("<" + "C" + ">");
+                                i++;
+                            }
+                            if (Expresion[i + 1] == Convert.ToChar("'"))
+                            {
+                                expresion.Add("<'>");
+                                i++;
+                            }
+                            else
+                            {
+                                int x = Convert.ToInt16("W");
+                            }
+
+                        }
+                    }
+                    else if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                    {
+
+                        while (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                        {
                             i++;
                         }
-                        if (Expresion[i + 1] == Convert.ToChar("'"))
+                        i--;
+                        expresion.Add("<" + "ID" + ">");
+                    }
+                    else if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 47 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 58)
+                    {
+
+                        while (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 47 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 58)
                         {
-                            expresion.Add("<'>");
                             i++;
+                        }
+                        i--;
+                        expresion.Add("<" + "N" + ">");
+                    }
+                    else if (Expresion[i] == '+')
+                    {
+                        expresion.Add("<+>");
+
+                    }
+                    else if (Expresion[i] == '=')
+                    {
+                        expresion.Add("<=>");
+
+                    }
+                    else if (Expresion[i] == '*')
+                    {
+                        expresion.Add("<*>");
+
+                    }
+                    else if (Expresion[i] == '|')
+                    {
+                        if (char.IsUpper(Expresion[i+1]) || Expresion[i+1] == Convert.ToChar("'") || Expresion[i+1] == ' ')
+                        { expresion.Add("<|>"); }
+                        else { int x = Convert.ToInt16("W"); }
+
+                    }
+                    else if (Expresion[i] == '{')
+                    {
+                        int evaluar = i;
+                        while(Expresion[evaluar]!= '}')
+                        {
+                            evaluar++;
+                        }
+                        expresion.Add("<{>");
+
+                    }
+                    else if (Expresion[i] == '}')
+                    {
+                        expresion.Add("<}>");
+                        int evaluar = i;
+                        while (Expresion[evaluar] != '{')
+                        {
+                            evaluar--;
                         }
 
                     }
-                }
-                else if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
-                {
-
-                    while (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                    else if (Expresion[i] == '(')
                     {
-                        i++;
-                    }
-                    i--;
-                    expresion.Add("<" + "ID" + ">");
-                }
-                else if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 47 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 58)
-                {
+                        int evaluar = i;
+                        while (Expresion[evaluar] != ')')
+                        {
+                            evaluar++;
+                        }
+                        expresion.Add("<{>");
+                        expresion.Add("<(>");
 
-                    while (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 47 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 58)
+                    }
+                    else if (Expresion[i] == ')')
                     {
-                        i++;
+                        int evaluar = i;
+                        while (Expresion[evaluar] != '(')
+                        {
+                            evaluar--;
+                        }
+                        expresion.Add("<{>");
+                        expresion.Add("<)>");
+
                     }
-                    i--;
-                    expresion.Add("<" + "N" + ">");
+                    else if (Expresion[i] != ' ')
+                    {
+                        int x = Convert.ToInt16("W");
+                    }
                 }
-                else if (Expresion[i] == '+')
+                int cantidadN = 0;
+                foreach(var item in expresion)
                 {
-                    expresion.Add("<+>");
-
+                    if(item == "<N>")
+                    {
+                        cantidadN++;
+                    }
                 }
-                else if (Expresion[i] == '=')
-                {
-                    expresion.Add("<=>");
-
-                }
-                else if (Expresion[i] == '*')
-                {
-                    expresion.Add("<*>");
-
-                }
-                else if (Expresion[i] == '|')
-                {
-                    expresion.Add("<|>");
-
-                }
-                else if (Expresion[i] == '{')
-                {
-                    expresion.Add("<{>");
-
-                }
-                else if (Expresion[i] == '}')
-                {
-                    expresion.Add("<}>");
-
-                }
-                else if (Expresion[i] == '(')
-                {
-                    expresion.Add("<(>");
-
-                }
-                else if (Expresion[i] == ')')
-                {
-                    expresion.Add("<)>");
-
-                }
+                if (cantidadN == 1)
+                    return expresion;
+                else return null;
             }
-            return expresion;
+            catch
+            {
+                return null;
+            }
         }
         public List<string> TokenActions(string Expresion)
         {
@@ -257,7 +312,7 @@ namespace LenguajesFase1
                 return expresion;
             }
             catch { return null; }
-        }
+        }// Metodo encargado de convertir a tokens las Actions
         public List<string> TokenError(string Expresion)
         {
             try
@@ -297,7 +352,7 @@ namespace LenguajesFase1
             {
                 return null;
             }
-        }
+        }// Metodo encargado de convertir a tokens los errores
         public bool analizarActions(string linea)
         {
             bool aux = true;
@@ -330,7 +385,7 @@ namespace LenguajesFase1
                 return aux;
             }
             catch { return false; }
-        }
+        }//Metodo encargado de verificar que el nombre del metodo actions este correcto
     }
     class Program
     {
@@ -350,7 +405,7 @@ namespace LenguajesFase1
                     string Error_tipo = "";
                     int Contador = 0;
                     int totalActions = 0;
-                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\prueba_3-1.txt";
+                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\Prueba1.txt";
                     int contadorActions = 0;
                     using (StreamReader lector = new StreamReader(@arg))
                     {
@@ -367,13 +422,13 @@ namespace LenguajesFase1
                                         linea = linea.Trim(' ');
                                         if (linea == "SETS")
                                         {
-                                            Comparar.crear("(<ID>.<=>.((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)).((<..>|<+>).((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)))*)");
+                                            Comparar.crear("(<ID>.<=>.((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)).((<..>|<+>).((<'>.<C>.<'>)|(<CHR>.<(>.<N>.<)>)))*)");// arbol sets
                                             Comparar.CrearArbol();
                                             Validacion++;
                                         }
                                         else if (linea == "TOKENS")
                                         {
-                                            Comparar.crear("(<TOKEN>.<N>.<=>(<ID>|<'>.<C>.<'>|<*>|<|>|<+>))");//Tokens
+                                            Comparar.crear("(<TOKEN>.<N>.<=>(<ID>|<'>.<C>.<'>|<*>|<|>|<+>|<(>|<)>|<{>|<}>*)");//arbol Tokens
                                             Comparar.CrearArbol();
                                             Validacion = 2;
                                         }
@@ -403,7 +458,7 @@ namespace LenguajesFase1
                                                 if (linea == "TOKENS")
                                                 {
 
-                                                    Comparar.crear("(<TOKEN>.<N>.<=>(<ID>|<'>.<C>.<'>|<*>|<|>|<+>))");
+                                                    Comparar.crear("(<TOKEN>.<N>.<=>(<ID>|<'>.<C>.<'>|<*>|<|>|<+>|<(>|<)>|<{>|<}>*)");// arbol tokens
                                                     Comparar.CrearArbol();
                                                     Validacion++;
                                                     Contador = 0;
@@ -425,8 +480,13 @@ namespace LenguajesFase1
                                         if (linea.Contains("TOKEN"))
                                         {
                                             Expresiones evaluar = new Expresiones();
-                                            var comp = evaluar.TokenTokens(linea);
-                                            Contador++;
+                                            var comp = evaluar.TokenTokens(linea.Replace('\t',' '));
+                                        if (comp == null )
+                                        {
+                                            Error_tipo = "Error en la sintaxis de linea";
+                                            Error = true;
+                                        }
+                                        Contador++;
                                         }
                                         else
                                         {
@@ -435,14 +495,16 @@ namespace LenguajesFase1
                                                 linea = linea.Trim(' ');
                                                 if (linea == "ACTIONS")
                                                 {
-                                                    Comparar.crear("(<N>.<=>.<'>.<ID>.<'>)");
+                                                    Comparar.crear("(<N>.<=>.<'>.<ID>.<'>)");// arbol actions
                                                     Comparar.CrearArbol();
                                                     Validacion++;
                                                     Contador = 0;
                                                 }
+                                                else if(linea =="")
+                                        { }
                                                 else
                                                 {
-                                                    Error_tipo = "La linea de comando 'ACTIONS' no se encuentra";
+                                                    Error_tipo = "La linea de comando 'ACTIONS' no se encuentra o error al definir token";
                                                     Error = true;
                                                 }
                                             }
@@ -459,7 +521,7 @@ namespace LenguajesFase1
                                         if (contadorActions == 0)
                                         {
                                             Expresiones actions = new Expresiones();
-                                            if (actions.analizarActions(linea.Trim(' ')) && totalActions == 0)
+                                            if (actions.analizarActions(linea.Trim(' ')) && totalActions == 0&& linea.Trim(' ') =="RESERVADAS()")
                                             {
                                                 contadorActions++;
                                             }
@@ -525,7 +587,11 @@ namespace LenguajesFase1
                                                     contadorActions = 0;
                                                 }
                                             }
-                                            else if (linea.Contains("ERROR") == false)
+                                        else if (linea == ""|| linea == " "|| linea == "\t")
+                                        {
+
+                                         }
+                                     else if (linea.Contains("ERROR") == false)
                                             {
                                                 Expresiones evaluar = new Expresiones();
                                                 var comp = evaluar.TokenActions(linea);
@@ -537,6 +603,7 @@ namespace LenguajesFase1
 
                                                 Contador++;
                                             }
+                        
                                             else
                                             {
                                                 Error_tipo = "Error en final de Action <}>";

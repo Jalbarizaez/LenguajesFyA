@@ -84,13 +84,13 @@ namespace LenguajesFase1
         static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
         static Stack<string> T = new Stack<string>();// Tokens llamada
         static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
-        public Queue<string> Inorden = new Queue<string>();
+        public Queue<string> Inorden = new Queue<string>();// cola en inorden
         public void in_orden()
         {
             ;
             in_orden(Arbol_Final);
 
-        }
+        }//metodo publico para inorden
         private void in_orden(Nodo raiz)
         {
                 if (/*raiz.EsHoja()*/raiz!=null)
@@ -203,6 +203,7 @@ namespace LenguajesFase1
             nounario.Add(")");
             nounario.Add("(");
         }
+        //Metodos para que al ingresar la expresion como string genere los tokens para el arbol de expresiones
         public void CrearArbol()
         {
             
@@ -303,7 +304,7 @@ namespace LenguajesFase1
             Arbol_Final.Izquierdo = hijo;
             Arbol_Final.Derecho = auxiliar;
             in_orden();
-        }
+        }// Metodo de creacion del arbol 
 
     }
    
