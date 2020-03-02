@@ -8,6 +8,73 @@ namespace LenguajesFase1
 {
     class Árbol
     {
+        public ErrorVerificado Comparar(List<string> linea)
+        {
+            ErrorVerificado errorRetorno = new ErrorVerificado();
+            errorRetorno.Error = false;
+            errorRetorno.tipo = "";
+            List<string> valuar = new List<string>();
+            for(int i = 1; i<ex.Count-1;i++)
+            {
+                valuar.Add(ex[i]);
+            }
+            int tamaño = linea.Count;
+            int recorrer = 0;
+            int banderainicio = 0;
+            int barrerafinal = 0;
+            for(int i = 0; i<valuar.Count; i++)
+            {
+                if (nounario.Contains(valuar[i]) || unario.Contains(valuar[i])|| recorrer +1> tamaño)
+                {
+                    if(  st.Contains(valuar[i]))
+                    {
+                        errorRetorno.Error = true;
+                        errorRetorno.tipo = "Se esperaba " + valuar[i];
+
+                    }
+                    if (valuar[i] == "*")
+                    {
+
+                    }
+                    else if (valuar[i] == "+")
+                    {
+
+                    }
+                    else if (valuar[i] == "|")
+                    {
+                    }
+                    else if (valuar[i] == "(")
+                    {
+                    }
+
+                }
+                else
+                {
+                    if(valuar[i] != linea[recorrer])
+                    {
+                        errorRetorno.Error = true;
+                        errorRetorno.tipo = "Se esperaba " + valuar[i];
+                    }
+                    else
+                    {
+                        recorrer++;
+                    }
+
+                }
+                
+                if (errorRetorno.Error == true)
+                    break;
+
+            }
+
+
+
+
+
+
+
+            return errorRetorno;
+        }
 
         public static Nodo Arbol_Final = new Nodo(".");
         static List<string> unario = new List<string>();// operadores unarios
