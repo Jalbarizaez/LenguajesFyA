@@ -201,11 +201,14 @@ namespace LenguajesFase1
                     }
                     else if (Expresion[i] == '|')
                     {
-                        if (char.IsUpper(Expresion[i+1]) || Expresion[i+1] == Convert.ToChar("'") || Expresion[i+1] == ' ')
+                        if (char.IsUpper(Expresion[i + 1]) || Expresion[i + 1] == Convert.ToChar("'") || Expresion[i + 1] == ' ')
                         { expresion.Add("<|>"); }
                         else { int x = Convert.ToInt16("W"); }
-
+                       
                     }
+                   
+
+                    
                     else if (Expresion[i] == '{')
                     {
                         int evaluar = i;
@@ -422,7 +425,7 @@ namespace LenguajesFase1
                     string Error_tipo = "";
                     int Contador = 0;
                     int totalActions = 0;
-                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\Prueba14.txt";
+                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\D.txt";
                     int contadorActions = 0;
                     using (StreamReader lector = new StreamReader(arg))
                     {
@@ -674,6 +677,11 @@ namespace LenguajesFase1
                             Error_tipo = "No venia ningun error definido";
                             linea_Archivo++;
 
+                        }
+                        if (Validacion == 0)
+                        {
+                            Error = true;
+                            Error_tipo = "Archivo en blanco";
                         }
                         if (Error == true)
                         {
