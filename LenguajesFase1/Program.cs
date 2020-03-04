@@ -550,6 +550,7 @@ namespace LenguajesFase1
                                                 if (actions.analizarActions(linea.Trim(' ')))
                                                 {
                                                     contadorActions++;
+                                                    Contador = 0;
                                                 }
                                                 else if (linea.Contains("ERROR"))
                                                 {
@@ -595,7 +596,7 @@ namespace LenguajesFase1
                                         {
                                             if (linea.Trim(' ') == "}")
                                             {
-                                                if (Contador == 0)
+                                                if ( Contador == 0)
                                                 {
                                                     Error_tipo = "No venia definido ningun elemento en el Action";
                                                     Error = true;
