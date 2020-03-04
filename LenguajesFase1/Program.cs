@@ -201,7 +201,7 @@ namespace LenguajesFase1
                     }
                     else if (Expresion[i] == '|')
                     {
-                        if (char.IsUpper(Expresion[i + 1]) || Expresion[i + 1] == Convert.ToChar("'") || Expresion[i + 1] == ' ')
+                        if (char.IsUpper(Expresion[i + 1]) || Expresion[i + 1] == Convert.ToChar("'") || Expresion[i + 1] == ' '|| Expresion[i + 1] != '*')
                         { expresion.Add("<|>"); }
                         else { int x = Convert.ToInt16("W"); }
                        
