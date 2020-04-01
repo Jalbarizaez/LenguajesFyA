@@ -104,6 +104,80 @@ namespace LenguajesFase1
                 in_orden(raiz.Derecho);
             }
         }
+        int contadorSimbolos;
+
+        private void post_orden(Nodo hoja)
+        {
+            if (hoja != null)
+            {
+                post_orden(hoja.Izquierdo);
+                post_orden(hoja.Derecho);
+                if(unario.Contains(hoja.id))
+                {
+                    switch (hoja.id)
+                    {
+                        case "+":
+                            hoja.First = hoja.Izquierdo.First;
+                            hoja.Last = hoja.Izquierdo.Last;
+                            break;
+                        case "*":
+                            hoja.Nullable = true;
+                            hoja.First = hoja.Izquierdo.First;
+                            hoja.Last = hoja.Izquierdo.Last;
+                            break;
+                    }
+                }
+                else if(nounario.Contains(hoja.id))
+                {
+                    switch (hoja.id)
+                    {
+                        case ".":
+                            if (hoja.Izquierdo.Nullable == true)
+                                hoja.First += hoja.Izquierdo.First +","+ hoja.Derecho.First;
+                            else
+                                hoja.First += hoja.Izquierdo.First;
+
+                            if (hoja.Derecho.Nullable == true)
+                                hoja.Last += hoja.Izquierdo.Last+ "," + hoja.Derecho.Last;
+                            else
+                                hoja.Last += hoja.Derecho.First;
+                            if(hoja.Izquierdo.Nullable == true && hoja.Derecho.Nullable == true)
+                            {
+                                hoja.Nullable = true;
+                            }
+                            break;
+                            
+                        case "|":
+                            hoja.First += hoja.Izquierdo.First + "," + hoja.Derecho.First;
+                            hoja.Last += hoja.Izquierdo.Last + "," + hoja.Derecho.Last;
+                            if (hoja.Izquierdo.Nullable == true || hoja.Derecho.Nullable == true)
+                            {
+                                hoja.Nullable = true;
+                            }
+                            break;
+
+                    }
+                }
+                else if(st.Contains(hoja.id)|| hoja.id=="#")
+                {
+                    hoja.simbolo = contadorSimbolos.ToString();
+                    hoja.First = hoja.simbolo;
+                    hoja.Last = hoja.simbolo;
+                    contadorSimbolos++;
+                }
+
+
+            }
+        }
+        public void FLN(string expresion)
+        {
+            crear("(" + expresion + ")");
+            contadorSimbolos = 1;
+            CrearArbol();
+            post_orden(Arbol_Final);
+            
+        }
+
         public void crear(string expresion)
         {
             ex.Clear();
@@ -132,19 +206,23 @@ namespace LenguajesFase1
                         token += expresion[i];
                         i++;
                     }
-                    token = token + ">";
+
+                    if (token == "<")
+                    { token = token + expresion[i] + ">"; }
+                    else {  token = token + ">"; }
                     ex.Add(token);
                 }
-                else if (expresion[i] == '/')
-                {
-                    ex.Add(expresion[i].ToString() + expresion[i + 1].ToString());
-                    i++;
-                }
-                else
+                //else if (expresion[i] == '/')
+                //{
+                //    ex.Add(expresion[i].ToString() + expresion[i + 1].ToString());
+                //    i++;
+                //}
+                else if(expresion[i] != '>')
                     ex.Add(expresion[i].ToString());
             }
 
         }
+        //REVISAR CREACION DE TERMINALES
         private void terminales(string expresion)
         {
             
@@ -158,7 +236,9 @@ namespace LenguajesFase1
                         token += expresion[i];
                         i++;
                     }
-                    token = token + ">";
+                    if (token == "<")
+                    { token = token + expresion[i] + ">"; }
+                    else { token = token + ">"; }
                     if (st.Contains(token) == false)
                         st.Add(token);
             
@@ -172,13 +252,13 @@ namespace LenguajesFase1
             operadores_Precedencia.Add(".", 2);
             operadores_Precedencia.Add("|", 1);
         }
-        private void Llenar_st(List<string> llenar)
-        {
-            foreach (var item in llenar)
-            {
-                st.Add(item);
-            }
-        }
+        //private void Llenar_st(List<string> llenar)
+        //{
+        //    foreach (var item in llenar)
+        //    {
+        //        st.Add(item);
+        //    }
+        //}
         private bool VerificarPrecedencia(string token)
         {
             if (token == "*")
@@ -303,7 +383,7 @@ namespace LenguajesFase1
             hijo.Padre = Arbol_Final;
             Arbol_Final.Izquierdo = hijo;
             Arbol_Final.Derecho = auxiliar;
-            in_orden();
+          
         }// Metodo de creacion del arbol 
 
     }

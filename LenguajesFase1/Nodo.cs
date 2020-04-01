@@ -13,6 +13,11 @@ namespace LenguajesFase1
             public Nodo Padre { get; set; }
             public Nodo Izquierdo { get; set; }
             public Nodo Derecho { get; set; }
+        public string Last = "";
+        public string First = "";
+        public bool Nullable = false;
+        public string simbolo = "";
+
             //Constructor
              public Nodo(string identificador)
             {
@@ -21,11 +26,9 @@ namespace LenguajesFase1
                 this.Derecho = null;
                 this.Padre = null;
             }
-            public Nodo()
-            {
-          
-            }
-        public Nodo(string identificador, Nodo izquierdo, Nodo derecho, Nodo padre)
+        public Nodo()
+        { }
+            public Nodo(string identificador, Nodo izquierdo, Nodo derecho, Nodo padre)
             {
                 this.id = identificador;
                 this.Izquierdo = izquierdo;

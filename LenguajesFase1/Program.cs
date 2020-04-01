@@ -9,6 +9,7 @@ namespace LenguajesFase1
 {
     class Expresiones
     {
+        public List<string> Operadores = new List<string>();
         public List<string> TokenSets(string Expresion)// Metodo encargado de convertir a tokens los sets
         {
             int contador = 0;
@@ -22,7 +23,7 @@ namespace LenguajesFase1
                         i++;
                         expresion.Add("<" + ".." + ">");
                     }
-                    else if (i < Expresion.Length - 1&& Expresion[i] == '.')
+                    else if (i < Expresion.Length - 1 && Expresion[i] == '.')
                     {
                         if ((Expresion[i] == '.' && Expresion[i + 1] != '.') || (Expresion[i] != '.' && Expresion[i + 1] == '.'))
                         {
@@ -112,7 +113,7 @@ namespace LenguajesFase1
                         int x = Convert.ToInt16("W");
 
                     }
-                    
+
                 }
                 return expresion;
             }
@@ -127,7 +128,8 @@ namespace LenguajesFase1
                 for (int i = 0; i < Expresion.Length; i++)
                 {
                     if (Expresion[i] == 'T' && Expresion[i + 1] == 'O')
-                    { if (Expresion[i] == 'T' && Expresion[i + 1] == 'O' && Expresion[i + 2] == 'K' && Expresion[i + 3] == 'E' && Expresion[i + 4] == 'N')
+                    {
+                        if (Expresion[i] == 'T' && Expresion[i + 1] == 'O' && Expresion[i + 2] == 'K' && Expresion[i + 3] == 'E' && Expresion[i + 4] == 'N')
                         {
                             i = i + 4;
                             expresion.Add("<" + "TOKEN" + ">");
@@ -201,18 +203,18 @@ namespace LenguajesFase1
                     }
                     else if (Expresion[i] == '|')
                     {
-                        if (char.IsUpper(Expresion[i + 1]) || Expresion[i + 1] == Convert.ToChar("'") || Expresion[i + 1] == ' '&& Expresion[i + 1] != Convert.ToChar("*") && Expresion[i + 1] != '?' && Expresion[i + 1] != '+')
+                        if (char.IsUpper(Expresion[i + 1]) || Expresion[i + 1] == Convert.ToChar("'") || Expresion[i + 1] == ' ' && Expresion[i + 1] != Convert.ToChar("*") && Expresion[i + 1] != '?' && Expresion[i + 1] != '+')
                         { expresion.Add("<|>"); }
                         else { int x = Convert.ToInt16("W"); }
-                       
-                    }
-                   
 
-                    
+                    }
+
+
+
                     else if (Expresion[i] == '{')
                     {
                         int evaluar = i;
-                        while(Expresion[evaluar]!= '}')
+                        while (Expresion[evaluar] != '}')
                         {
                             evaluar++;
                         }
@@ -257,9 +259,9 @@ namespace LenguajesFase1
                     }
                 }
                 int cantidadN = 0;
-                foreach(var item in expresion)
+                foreach (var item in expresion)
                 {
-                    if(item == "<N>")
+                    if (item == "<N>")
                     {
                         cantidadN++;
                     }
@@ -311,7 +313,7 @@ namespace LenguajesFase1
                         i--;
                         expresion.Add("<" + "N" + ">");
                     }
-                    else if(Expresion[i] != ' ')
+                    else if (Expresion[i] != ' ')
                     {
                         expresion.Add("<" + "C" + ">");
                     }
@@ -346,9 +348,9 @@ namespace LenguajesFase1
                         {
                             i++;
                         }
-                        
+
                         expresion.Add("<" + "N" + ">");
-                        if(Convert.ToInt16(Convert.ToByte(Expresion[i])) > 47 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 58)
+                        if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 47 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 58)
                         {
 
                         }
@@ -362,7 +364,7 @@ namespace LenguajesFase1
                     }
                     else if (Expresion[i] != ' ')
                         expresion.Add("<" + "C" + ">");
-                    
+
 
                 }
 
@@ -406,28 +408,132 @@ namespace LenguajesFase1
             }
             catch { return false; }
         }//Metodo encargado de verificar que el nombre del metodo actions este correcto
+        public string Tokens(string Exp,Dictionary<string,string> Sets)// Metodo encargado de convertir a tokens los tokens
+        {
+            Operadores.Clear();
+            Operadores.Add("*");
+            Operadores.Add("+");
+            Operadores.Add(".");
+            Operadores.Add("|");
+            Operadores.Add(")");
+            Operadores.Add("(");
+
+            bool bandera = false;
+            string Expresion = "";
+            for (int i = 0; i<Exp.Length;i++)
+            {
+                if (bandera == true)
+                    Expresion += Exp[i];
+                if (bandera == false && Exp[i] == '=')
+                    bandera = true;
+            }
+            
+          
+            
+         
+       
+            string expresion = "";
+            try
+            {
+                for (int i = 0; i < Expresion.Length; i++)
+                {
+        
+                    if (Expresion[i] == Convert.ToChar("'"))
+                    {
+                        //expresion+=("<'>");
+                        if (i + 1 != Expresion.Length)
+                        {
+                            if (Expresion[i + 1] != ' ' /*|| Expresion[i + 1] *//*!= Convert.ToChar("'")*/)
+                            {
+                                //expresion += ".";
+                                expresion += ("<" + Expresion[i + 1] + ">");
+                                i++;
+                            }
+                            if (Expresion[i + 1] == Convert.ToChar("'"))
+                            {
+                                //expresion += ".";
+                                //expresion += ("<'>");
+                                i++;
+                                for(int j = i+1;j< Expresion.Length; j++)
+                                {
+                                    if (Expresion[j] == Convert.ToChar("'") || (Convert.ToInt16(Convert.ToByte(Expresion[j])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[j])) < 91))
+                                    {
+                                        expresion += ".";
+                                        j = Expresion.Length;
+                                    }
+                                    else if (Operadores.Contains(Expresion[j].ToString())) { j = Expresion.Length; }
+                                }
+                            }
+                            else
+                            {
+                                int x = Convert.ToInt16("W");
+                            }
+
+                        }
+                    }
+                    else if (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                    {
+                        string sets = "";
+                        while (Convert.ToInt16(Convert.ToByte(Expresion[i])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[i])) < 91)
+                        {
+                            sets += Expresion[i];
+                            i++;
+                        }
+                        i--;
+                        if (Sets.Keys.Contains(sets))
+                        {
+                            
+                            expresion += ("<" + sets + ">");
+                            for (int j = i+1; j < Expresion.Length; j++)
+                            {
+                                if (Expresion[j] == Convert.ToChar("(") || Expresion[j] == Convert.ToChar("'") || (Convert.ToInt16(Convert.ToByte(Expresion[j])) > 64 && Convert.ToInt16(Convert.ToByte(Expresion[j])) < 91))
+                                {
+                                    expresion += ".";
+                                    j = Expresion.Length;
+                                }
+                                else if(Operadores.Contains(Expresion[j].ToString())) { j = Expresion.Length; }
+                            }
+                        }
+
+                        else
+                        { int x = Convert.ToInt16("W"); }
+                    }
+                    else if(Operadores.Contains(Expresion[i].ToString()))
+                    {
+                        expresion += Expresion[i];
+                    }
+                    else if(Expresion[i].ToString() == "{")
+                        i = Expresion.Length;
+                 
+                }
+                return expresion;
+            }
+            catch { return null; }
+        }
     }
     class Program
     {
+        
         static void Main(string[] args)
         {
 
-            foreach (var arg in args)
-            {
+            //foreach (var arg in args)
+            //{
                 try {
 
-
+                    Dictionary<string, string> Sets = new Dictionary<string, string>();
                     Árbol Comparar = new Árbol();
                     int linea_Archivo = 0;
+                    string ExpresionTokens = "";
                     int contadorErrores = 0;
                     int Validacion = 0;
                     bool Error = false;
                     string Error_tipo = "";
                     int Contador = 0;
                     int totalActions = 0;
-                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\D.txt";
+                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\GRAMATICA.txt";
                     int contadorActions = 0;
-                    using (StreamReader lector = new StreamReader(arg))
+                    using (StreamReader lector = new StreamReader(URL))
                     {
                         while (lector.Peek() > -1)
                         {
@@ -468,6 +574,9 @@ namespace LenguajesFase1
                                                 Error_tipo = "Error en la sintaxis de linea";
                                                 Error = true;
                                             }
+                                        var lineafinal = linea.Replace(" ","");
+                                        var datos = lineafinal.Split('=');
+                                        Sets.Add(datos[0], datos[1]);
                                             Contador++;
                                         }
                                         else
@@ -506,6 +615,16 @@ namespace LenguajesFase1
                                                 Error_tipo = "Error en la sintaxis de linea";
                                                 Error = true;
                                             }
+                                        string ex = evaluar.Tokens(linea, Sets);
+                                      
+                                        if(Contador==0)
+                                        {
+                                            ExpresionTokens +="(" + (ex) + ")";
+                                        }
+                                        else
+                                        {
+                                            ExpresionTokens += "|" + "(" + (ex) + ")"; ;
+                                        }
                                             Contador++;
                                         }
                                         else
@@ -692,6 +811,9 @@ namespace LenguajesFase1
                         else
                         {
                             Console.WriteLine("Lectura realizada exitosamente");
+                        Árbol tablas = new Árbol();
+                        tablas.FLN(ExpresionTokens);
+
                         }
                         Console.WriteLine("------------------------------------------------------------------------------------------------------------");
                         Console.ReadKey();
@@ -709,4 +831,4 @@ namespace LenguajesFase1
     }
 
     }
-}
+//}
