@@ -75,55 +75,75 @@ namespace LenguajesFase1
 
             return errorRetorno;
         }
+        private static Dictionary<string, string> Simbolos = new Dictionary<string, string>();//Tabla de ID-Simbolos
+        private static Dictionary<string, List<string>> Follows = new Dictionary<string, List<string>>();//Tabla de follows 
+        public static Nodo Arbol_Final = new Nodo(".");// Arbol Final
+        private static List<string> unario = new List<string>();// operadores unarios
+        private static List<string> ex = new List<string>(); //Tokens
+        private static List<string> st = new List<string>();// Simbolos terminales
+        private static List<string> nounario = new List<string>();// operadores no unarios
+        private static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
+        private static Stack<string> T = new Stack<string>();// Tokens llamada
+        private static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
 
-        public static Nodo Arbol_Final = new Nodo(".");
-        static List<string> unario = new List<string>();// operadores unarios
-        static List<string> ex = new List<string>(); //Tokens
-        public static List<string> st = new List<string>();// Simbolos terminales
-        static List<string> nounario = new List<string>();// operadores no unarios
-        static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
-        static Stack<string> T = new Stack<string>();// Tokens llamada
-        static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
-        public Queue<string> Inorden = new Queue<string>();// cola en inorden
-        public void in_orden()
-        {
-            ;
-            in_orden(Arbol_Final);
-
-        }//metodo publico para inorden
-        private void in_orden(Nodo raiz)
-        {
-                if (/*raiz.EsHoja()*/raiz!=null)
-            {
-                in_orden(raiz.Izquierdo);
+        //private void in_orden(Nodo raiz)
+        //{
+        //        if (/*raiz.EsHoja()*/raiz!=null)
+        //    {
+        //        in_orden(raiz.Izquierdo);
 
 
-                Inorden.Enqueue(raiz.id);
+        //        Inorden.Enqueue(raiz.id);
                 
                 
-                in_orden(raiz.Derecho);
-            }
-        }
-        int contadorSimbolos;
+        //        in_orden(raiz.Derecho);
+        //    }
+        //}
+        private int contadorSimbolos;
 
-        private void post_orden(Nodo hoja)
+        private void FirstLastNullableFollows(Nodo hoja)
         {
             if (hoja != null)
             {
-                post_orden(hoja.Izquierdo);
-                post_orden(hoja.Derecho);
+                FirstLastNullableFollows(hoja.Izquierdo);
+                FirstLastNullableFollows(hoja.Derecho);
                 if(unario.Contains(hoja.id))
                 {
+                    string Lc1 = hoja.Izquierdo.Last;
+                    string Fc1 = hoja.Izquierdo.First;
+                    var Lc1_ = Lc1.Split(',');
+                    var Fc1_ = Fc1.Split(',');
                     switch (hoja.id)
                     {
                         case "+":
                             hoja.First = hoja.Izquierdo.First;
-                            hoja.Last = hoja.Izquierdo.Last;
+                            hoja.Last = hoja.Izquierdo.Last;                
+                            foreach (var item in Lc1_)
+                            {
+                                var lista = Follows[item];
+                                foreach (var f in Fc1_)
+                                {
+                                    if (!lista.Contains(f))
+                                        lista.Add(f);
+                                }
+                                Follows[item] = lista;
+                            }
                             break;
+
                         case "*":
                             hoja.Nullable = true;
                             hoja.First = hoja.Izquierdo.First;
                             hoja.Last = hoja.Izquierdo.Last;
+                            foreach (var item in Lc1_)
+                            {
+                                var lista = Follows[item];
+                                foreach (var f in Fc1_)
+                                {
+                                    if (!lista.Contains(f))
+                                        lista.Add(f);
+                                }
+                                Follows[item] = lista;
+                            }
                             break;
                     }
                 }
@@ -145,6 +165,20 @@ namespace LenguajesFase1
                             {
                                 hoja.Nullable = true;
                             }
+                            string Lc1 = hoja.Izquierdo.Last;
+                            string Fc2 = hoja.Derecho.First;
+                            var Lc1_ = Lc1.Split(',');
+                            var Fc2_ = Fc2.Split(',');
+                            foreach(var item in Lc1_)
+                            {
+                                var lista = Follows[item];
+                                foreach(var f in Fc2_)
+                                {
+                                    if (!lista.Contains(f))
+                                        lista.Add(f);
+                                }
+                                Follows[item] = lista;
+                            }
                             break;
                             
                         case "|":
@@ -164,17 +198,20 @@ namespace LenguajesFase1
                     hoja.First = hoja.simbolo;
                     hoja.Last = hoja.simbolo;
                     contadorSimbolos++;
+                    Simbolos.Add(hoja.simbolo, hoja.id.Trim('<', '>'));
+                    Follows.Add(hoja.simbolo, new List<string>());
                 }
 
 
             }
         }
-        public void FLN(string expresion)
+       
+        public void Automata(string expresion)
         {
             crear("(" + expresion + ")");
             contadorSimbolos = 1;
             CrearArbol();
-            post_orden(Arbol_Final);
+            FirstLastNullableFollows(Arbol_Final);
             
         }
 
@@ -222,7 +259,7 @@ namespace LenguajesFase1
             }
 
         }
-        //REVISAR CREACION DE TERMINALES
+ 
         private void terminales(string expresion)
         {
             

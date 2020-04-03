@@ -13,10 +13,11 @@ namespace LenguajesFase1
             public Nodo Padre { get; set; }
             public Nodo Izquierdo { get; set; }
             public Nodo Derecho { get; set; }
-        public string Last = "";
-        public string First = "";
-        public bool Nullable = false;
-        public string simbolo = "";
+            public string Last = "";
+            public string First = "";
+            public bool Nullable = false;
+            public string simbolo = "";
+          
 
             //Constructor
              public Nodo(string identificador)

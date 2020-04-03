@@ -408,7 +408,7 @@ namespace LenguajesFase1
             }
             catch { return false; }
         }//Metodo encargado de verificar que el nombre del metodo actions este correcto
-        public string Tokens(string Exp,Dictionary<string,string> Sets)// Metodo encargado de convertir a tokens los tokens
+        public string Tokens(string Exp,Dictionary<string,string> Sets)// Metodo encargado de convertir a expresion tokens
         {
             Operadores.Clear();
             Operadores.Add("*");
@@ -812,7 +812,7 @@ namespace LenguajesFase1
                         {
                             Console.WriteLine("Lectura realizada exitosamente");
                         Árbol tablas = new Árbol();
-                        tablas.FLN(ExpresionTokens);
+                        tablas.Automata(ExpresionTokens);
 
                         }
                         Console.WriteLine("------------------------------------------------------------------------------------------------------------");
@@ -826,6 +826,7 @@ namespace LenguajesFase1
                 { Console.WriteLine("Archvio incorrecto");
                     Console.ReadKey();
                 }
+
                 }
             
     }
