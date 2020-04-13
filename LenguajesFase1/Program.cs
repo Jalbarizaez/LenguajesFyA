@@ -510,16 +510,90 @@ namespace LenguajesFase1
             }
             catch { return null; }
         }
+        public void EscribirFLN(string url, Árbol arbol)
+        {
+            var Nodos = arbol.FLNEscribir();
+            var Unarios = arbol.RetornarOPUnarios();
+            var NoUnarios = arbol.RetornarONoPUnarios();
+            using (StreamWriter lector = new StreamWriter(url))
+            {
+                lector.WriteLine("Simbolo   " + "First   " + "Last   " + "Nullable   ");
+                foreach (var item in Nodos)
+                {
+                    string es = "";
+                    if ( item.id.Length != 1)
+                    {
+                        es += "'";
+                        for (int i = 1; i < item.id.Length - 1; i++)
+                        {
+                            es += item.id[i];
+                        }
+                        es += "'";
+                    }
+                    else
+                    {
+                        es += item.id;
+                    }
+                    
+                    lector.WriteLine( es+ " - " + item.First + " - " + item.Last + " - " + item.Nullable.ToString());
+                }
+            }
+        }
+        public void EscribirFollows(string url, Árbol arbol)
+        {
+            var Follows = arbol.RetornarFollows();
+            using (StreamWriter lector = new StreamWriter(url))
+            {
+                lector.WriteLine("Simbolo   " + "Follow   " );
+                foreach (var item in Follows)
+                {
+                    string escribir = item.Key+"  -  ";
+                    foreach(var result in item.Value)
+                    {
+                        escribir += result + ",";
+                    }
+                    lector.WriteLine(escribir.Trim(','));
+                }
+            }
+        }
+        public void EscribirTransiciones(string url, Árbol arbol)
+        {
+            var Transiciones = arbol.RetornarTransiciones();
+            var Terminales = arbol.RetornarTerminales();
+            using (StreamWriter lector = new StreamWriter(url))
+            {
+                string escribir = "  ";
+                foreach(var item in Terminales)
+                {
+                    escribir += item + " - ";
+                }
+                lector.WriteLine(escribir);
+                foreach (var item in Transiciones)
+                {
+                    string escri = item.Key + "  ||||  ";
+                    foreach (var result in item.Value)
+                    {
+                        if (result.Length > 0)
+                            escri += result;
+                        else
+                            escri += "X";
+                        escri += " - ";
+                    }
+                    lector.WriteLine(escri.Trim('-'));
+                }
+            }
+        }
     }
     class Program
     {
-        
+      
         static void Main(string[] args)
         {
 
-            //foreach (var arg in args)
-            //{
-                try {
+            foreach (var arg in args)
+            {
+                try
+                {
 
                     Dictionary<string, string> Sets = new Dictionary<string, string>();
                     Árbol Comparar = new Árbol();
@@ -533,7 +607,7 @@ namespace LenguajesFase1
                     int totalActions = 0;
                     string URL = @"C:\Users\jealb\OneDrive\Escritorio\GRAMATICA.txt";
                     int contadorActions = 0;
-                    using (StreamReader lector = new StreamReader(URL))
+                    using (StreamReader lector = new StreamReader(arg))
                     {
                         while (lector.Peek() > -1)
                         {
@@ -606,53 +680,60 @@ namespace LenguajesFase1
                                         }
                                         break;
                                     case 2:
-                                        if (linea.Contains("TOKEN"))
+                                    if (linea.Contains("TOKEN"))
+                                    {
+                                        Expresiones evaluar = new Expresiones();
+                                        var comp = evaluar.TokenTokens(linea.Replace('\t', ' '));
+                                        if (comp == null)
                                         {
-                                            Expresiones evaluar = new Expresiones();
-                                            var comp = evaluar.TokenTokens(linea.Replace('\t', ' '));
-                                            if (comp == null)
-                                            {
-                                                Error_tipo = "Error en la sintaxis de linea";
-                                                Error = true;
-                                            }
+                                            Error_tipo = "Error en la sintaxis de linea";
+                                            Error = true;
+                                        }
                                         string ex = evaluar.Tokens(linea, Sets);
-                                      
-                                        if(Contador==0)
+                                        if (ex != null)
                                         {
-                                            ExpresionTokens +="(" + (ex) + ")";
-                                        }
-                                        else
-                                        {
-                                            ExpresionTokens += "|" + "(" + (ex) + ")"; ;
-                                        }
+                                            if (Contador == 0)
+                                            {
+                                                ExpresionTokens += "(" + (ex) + ")";
+                                            }
+                                            else
+                                            {
+                                                ExpresionTokens += "|" + "(" + (ex) + ")"; ;
+                                            }
                                             Contador++;
                                         }
                                         else
                                         {
-                                            if (Contador > 0)
+                                            Error_tipo = "Token no especificado en SETS";
+                                            Error = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Contador > 0)
+                                        {
+                                            linea = linea.Trim(' ');
+                                            if (linea == "ACTIONS")
                                             {
-                                                linea = linea.Trim(' ');
-                                                if (linea == "ACTIONS")
-                                                {
-                                                    Comparar.crear("(<N>.<=>.<'>.<ID>.<'>)");// arbol actions
-                                                    Comparar.CrearArbol();
-                                                    Validacion++;
-                                                    Contador = 0;
-                                                }
-                                                else if (linea == "")
-                                                { }
-                                                else
-                                                {
-                                                    Error_tipo = "La linea de comando 'ACTIONS' no se encuentra o error al definir token";
-                                                    Error = true;
-                                                }
+                                                Comparar.crear("(<N>.<=>.<'>.<ID>.<'>)");// arbol actions
+                                                Comparar.CrearArbol();
+                                                Validacion++;
+                                                Contador = 0;
                                             }
+                                            else if (linea == "")
+                                            { }
                                             else
                                             {
-                                                Error_tipo = "No venia especificado ningun TOKEN";
+                                                Error_tipo = "La linea de comando 'ACTIONS' no se encuentra o error al definir token";
                                                 Error = true;
                                             }
                                         }
+                                        else
+                                        {
+                                            Error_tipo = "No venia especificado ningun TOKEN";
+                                            Error = true;
+                                        }
+                                    }
                                         break;
                                     case 3:
 
@@ -813,8 +894,13 @@ namespace LenguajesFase1
                             Console.WriteLine("Lectura realizada exitosamente");
                         Árbol tablas = new Árbol();
                         tablas.Automata(ExpresionTokens);
+                        Expresiones Escritura = new Expresiones();
+                        var direccion = arg.Split('.');
+                        Escritura.EscribirFLN(direccion[0] + "FLN." + direccion[1], tablas);
+                        Escritura.EscribirFollows(direccion[0] + "Follows." + direccion[1], tablas);
+                        Escritura.EscribirTransiciones(direccion[0] + "Transiciones." + direccion[1], tablas);
 
-                        }
+                    }
                         Console.WriteLine("------------------------------------------------------------------------------------------------------------");
                         Console.ReadKey();
 
@@ -831,5 +917,5 @@ namespace LenguajesFase1
             
     }
 
-    }
-//}
+}
+}

@@ -75,8 +75,9 @@ namespace LenguajesFase1
 
             return errorRetorno;
         }
-        private static Dictionary<string, string> Simbolos = new Dictionary<string, string>();//Tabla de ID-Simbolos
+        private  Dictionary<string, string> Simbolos = new Dictionary<string, string>();//Tabla de ID-Simbolos
         private static Dictionary<string, List<string>> Follows = new Dictionary<string, List<string>>();//Tabla de follows 
+        private static Dictionary<string, List<string>> Transiciones = new Dictionary<string, List<string>>();//Tabla de transiciones Estados-Transiciones
         public static Nodo Arbol_Final = new Nodo(".");// Arbol Final
         private static List<string> unario = new List<string>();// operadores unarios
         private static List<string> ex = new List<string>(); //Tokens
@@ -85,22 +86,63 @@ namespace LenguajesFase1
         private static Stack<Nodo> S = new Stack<Nodo>();// Pila de arboles
         private static Stack<string> T = new Stack<string>();// Tokens llamada
         private static Dictionary<string, int> operadores_Precedencia = new Dictionary<string, int>();// precedencias
+        public List<Nodo> Postorden = new List<Nodo>();
 
-        //private void in_orden(Nodo raiz)
-        //{
-        //        if (/*raiz.EsHoja()*/raiz!=null)
-        //    {
-        //        in_orden(raiz.Izquierdo);
+        public List<string> RetornarOPUnarios()
+        {
+            return unario;
+        }
+        public List<string> RetornarONoPUnarios()
+        {
+            return nounario;
+        }
+        public List<Nodo> post_orden()
+        {
+            Postorden.Clear();
+            post_orden(Arbol_Final);
+            return Postorden;
+        }
+        private void post_orden(Nodo hoja)
+        {
+            if (hoja != null)
+            {
+                post_orden(hoja.Izquierdo);
+                post_orden(hoja.Derecho);
+                if (st.Contains(hoja.id) || hoja.id == "#")
+                { Postorden.Add(hoja); }
 
+            }
+        }
+        public List<Nodo> FLNEscribir()
+        {
+            Postorden.Clear();
+            FLNEscribir(Arbol_Final);
+            return Postorden;
+        }
+        private void FLNEscribir(Nodo hoja)
+        {
+            if (hoja != null)
+            {
+                FLNEscribir(hoja.Izquierdo);
+                FLNEscribir(hoja.Derecho);
 
-        //        Inorden.Enqueue(raiz.id);
-                
-                
-        //        in_orden(raiz.Derecho);
-        //    }
-        //}
+                 Postorden.Add(hoja); 
+
+            }
+        }
         private int contadorSimbolos;
-
+        public Dictionary<string,List< string>> RetornarFollows()
+        {
+            return Follows;
+        }
+        public Dictionary<string, List<string>> RetornarTransiciones()
+        {
+            return Transiciones;
+        }
+        public List<string> RetornarTerminales()
+        {
+            return st;
+        }
         private void FirstLastNullableFollows(Nodo hoja)
         {
             if (hoja != null)
@@ -205,15 +247,171 @@ namespace LenguajesFase1
 
             }
         }
-       
+        private List<string> Analizador (string estado)
+        {
+            List<string> followsTransiciones = new List<string>();
+            var evaluar = estado.Split(',');
+            var Nodos = post_orden();
+            foreach (var item in st)
+            {
+                string transi = "";
+                List<string> follows = new List<string>();
+                
+                foreach(var hoja in Nodos)
+                {
+                 
+                        if (hoja.id == item && evaluar.Contains(hoja.simbolo))
+                        {
+                            var Foll = Follows[hoja.simbolo];
+                            foreach (var simbolo in Foll)
+                            {
+                                if (!follows.Contains(simbolo))
+                                    follows.Add(simbolo);
+                            }
+                        }
+                    
+                 
+                }
+                foreach (var x in follows)
+                {
+                    transi += x + ",";
+                }
+                transi = transi.Trim(',');
+                followsTransiciones.Add(transi);
+
+            }
+            return followsTransiciones;
+        }
+        private void Transicion ()
+        {
+
+            var S0= Arbol_Final.First;
+            Queue<string> EstadosAnalizar = new Queue<string>();
+            EstadosAnalizar.Enqueue(S0);
+            while(EstadosAnalizar.Count>0)
+            {
+                string estado = EstadosAnalizar.Dequeue();
+                var Trans = Analizador(estado);
+                Transiciones.Add(estado, Trans);
+                foreach(var item in Trans)
+                {
+                    if (Transiciones.ContainsKey(item)== false &&item != "" && EstadosAnalizar.Contains(item) == false)
+                        EstadosAnalizar.Enqueue(item);
+                }
+            }
+        }
         public void Automata(string expresion)
         {
             crear("(" + expresion + ")");
             contadorSimbolos = 1;
             CrearArbol();
             FirstLastNullableFollows(Arbol_Final);
-            
+            Transicion();
         }
+
+    //    var estadoInicial = arbol.Postorden[arbol.Postorden.Count - 1];
+    //    Dictionary<string, List<int>> estados = new Dictionary<string, List<int>>();
+    //    List<List<int>> estadosNuevos = new List<List<int>>();
+    //    List<List<int>> estadosValidos = new List<List<int>>();
+    //    estadosNuevos.Add(estadoInicial.first);
+    //        List<int> prueba = new List<int>();
+    //    Dictionary<string, int> validos = new Dictionary<string, int>();
+    //    List<int> estadosTemporales = new List<int>();
+    //    int contadorEstados = 0;
+       
+    //        while (estadosNuevos.Count > 0)//tabla 3
+    //        {
+    //            try
+    //            {
+    //                string estadoTemp = "";
+    //    estadosNuevos[0].Sort();
+    //                foreach(var x in estadosNuevos[0])
+    //                {
+    //                    estadoTemp += x+",";
+    //                }
+    //validos.Add(estadoTemp, contadorEstados);
+
+    //                foreach (var y in Terminal)
+    //                {
+
+    //                    estadosTemporales = new List<int>();
+    //                    foreach (var x in estadosNuevos[0])
+    //                    {
+    //                        if (SimbolosTerminales[x - 1].valor == y)
+    //                        {
+    //                            foreach (var z in SimbolosTerminales[x - 1].follow)
+    //                            {
+    //                                if (!estadosTemporales.Contains(z))
+    //                                {
+    //                                    estadosTemporales.Add(z);
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                    estados.Add(y, estadosTemporales);
+    //                    if (!estadosValidos.Contains(estadosTemporales))
+    //                    {
+    //                        estadosNuevos.Add(estadosTemporales);
+    //                        estadosValidos.Add(estadosTemporales);
+
+    //                    }
+
+    //                }
+
+    //                bool valido = false;
+    //                foreach (var x in estados)
+    //                {
+                        
+    //                    if (estadosNuevos[0].Count > 0)
+    //                    {
+                            
+    //                        Console.Write("Estado " + contadorEstados + "     ");
+    //                        foreach (var z in estadosNuevos[0])
+    //                        {
+    //                            Console.Write(z + "   ");
+    //                        }
+    //                        Console.WriteLine();
+                          
+    //                        if (x.Key.Length == 3)
+    //                        {
+    //                            Console.WriteLine("     "+x.Key[1]);
+    //                        }
+    //                        else
+    //                        {
+    //                            Console.WriteLine("     "+x.Key);
+    //                        }
+    //                        Console.ForegroundColor = ConsoleColor.White;
+    //                        if (x.Value.Count>0)
+    //                        {
+    //                            foreach (var z in x.Value)
+    //                            {
+    //                                Console.Write("  " + z);
+    //                            }
+    //                        }
+    //                        else
+    //                        {
+    //                            Console.WriteLine("----");
+    //                        }
+    //                        Console.WriteLine();
+    //                        valido = true;
+    //                    }
+                        
+    //                }
+
+    //                estados = new Dictionary<string, List<int>>();
+    //                estadosNuevos.Remove(estadosNuevos[0]);
+    //                if (valido)
+    //                {
+    //                    contadorEstados++;
+    //                }
+                    
+    //            }
+    //            catch
+    //            {
+    //                estadosNuevos.Remove(estadosNuevos[0]);
+    //            }
+    //        }
+
 
         public void crear(string expresion)
         {
