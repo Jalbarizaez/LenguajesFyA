@@ -634,7 +634,7 @@ namespace LenguajesFase1
                     string Error_tipo = "";
                     int Contador = 0;
                     int totalActions = 0;
-                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\Proyecto3.txt";
+                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\GRAMATICA.txt";
                     int contadorActions = 0;
                     using (StreamReader lector = new StreamReader(arg))
                     {
@@ -782,7 +782,7 @@ namespace LenguajesFase1
                                                 Tokens.Add(comillas, add);
                                             }
                                             }
-                                            else
+                                            else//Revisar
                                             {
                                           
                                             Tokens_Sets.Add(Tok, Definicion[1]);
@@ -920,8 +920,8 @@ namespace LenguajesFase1
                                                     Error_tipo = "Error en la sintaxis de linea";
                                                     Error = true;
                                                 }
-                                            var accion = linea.Split('=');
-                                            Actions.Add(accion[1].Trim('\'',' '), accion[0]);
+                                                var accion = linea.Split('=');
+                                                Actions.Add(accion[1].Trim('\'',' '), accion[0]);
                                                 Contador++;
                                             }
 

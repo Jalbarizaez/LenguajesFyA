@@ -110,9 +110,13 @@ namespace LenguajesFase1
                             {
                                 if (Contador == 0)
                                 {   if (Terminales[j].Substring(1, Terminales[j].Length - 2).Contains( "\'"))
-                                    { Contador++; writer.WriteLine($"                                           if (temp[j] == \'{'\\'+Terminales[j].Substring(1, Terminales[j].Length - 2)}\') "); }
+                                    { Contador++; writer.WriteLine($"                                           if (temp[j] == \'{'\\'+Terminales[j].Substring(1, Terminales[j].Length - 2)}\') ");
+                                       
+                                    }
                                     else
-                                    { Contador++; writer.WriteLine($"                                           if (temp[j] == \'{Terminales[j].Substring(1, Terminales[j].Length - 2)}\') "); }
+                                    { Contador++; writer.WriteLine($"                                           if (temp[j] == \'{Terminales[j].Substring(1, Terminales[j].Length - 2)}\') ");
+
+                                    }
                                 }
                                 else
                                 {
@@ -123,6 +127,7 @@ namespace LenguajesFase1
                                 }
                                 writer.WriteLine("                                           {");
                                 writer.WriteLine($"                                              estado_temporal = {DefinirEstado(i, Terminales[j].Substring(1, Terminales[j].Length - 2), j)};");
+                                Contador++; writer.WriteLine($"                                           evaluar.Add(temp[j].ToString());");
                                 writer.WriteLine("                                           }");
                             }
 
@@ -241,9 +246,34 @@ namespace LenguajesFase1
                 writer.WriteLine("          {");
                 foreach (var item in Token_Sets)
                 {
-                    string ayuda = item.Key.Replace("'", "");
-                    ayuda = ayuda.Replace('"', ' ');
-                    writer.WriteLine($"                 Token_Sets.Add(\"{ayuda}\",\"{item.Value}\");");
+                    string escribir="";
+                    string ayuda = item.Key;
+                    for (int i = 0; i <ayuda.Length;i++)
+                    {
+                        if(ayuda[i]=='\'')
+                        {
+                            i++;
+                            if(ayuda[i] == '\'' )
+                            {
+                                escribir += "\\" + "'";
+                            }
+                            else if(ayuda[i] == '"')
+                            {
+                                escribir += "\\" + "\"";
+
+                            }
+                            else
+                            {
+                                escribir += ayuda[i];
+                            }
+                            i++;
+                        }
+                        else
+                        {
+                            escribir += ayuda[i];
+                        }
+                    }
+                    writer.WriteLine($"                 Token_Sets.Add(\"{escribir}\",\"{item.Value}\");");
                 }
                 writer.WriteLine("          }");
                 writer.WriteLine("          public static bool ComprobarEstado(int estado)");
