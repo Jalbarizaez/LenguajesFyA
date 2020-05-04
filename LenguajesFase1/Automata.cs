@@ -237,9 +237,36 @@ namespace LenguajesFase1
                 writer.WriteLine("          }");
                 writer.WriteLine("          public static void LlenarTokens()");
                 writer.WriteLine("          {");
-                foreach (var item in Token)
+                foreach (var item in Token)//Revisar para tokens que viene ' o "
                 {
-                    writer.WriteLine($"                 Token.Add(\"{item.Key}\",\"{item.Value}\");");
+                    string escribir = "";
+                    string ayuda = item.Key;
+                    for (int i = 0; i < ayuda.Length; i++)
+                    {
+                        if (ayuda[i] == '\'' || ayuda[i] == '\"')
+                        {
+                            
+                            if (ayuda[i] == '\'')
+                            {
+                                escribir += "\\" + "'";
+                            }
+                            else if (ayuda[i] == '"')
+                            {
+                                escribir += "\\" + "\"";
+
+                            }
+                            else
+                            {
+                                escribir += ayuda[i];
+                            }
+                            i++;
+                        }
+                        else
+                        {
+                            escribir += ayuda[i];
+                        }
+                    }
+                    writer.WriteLine($"                 Token.Add(\"{escribir}\",\"{item.Value}\");");
                 }
                 writer.WriteLine("          }");
                 writer.WriteLine("          public static void LlenarTokens_Sets()");

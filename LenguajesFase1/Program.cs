@@ -634,7 +634,7 @@ namespace LenguajesFase1
                     string Error_tipo = "";
                     int Contador = 0;
                     int totalActions = 0;
-                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\GRAMATICA.txt";
+                    string URL = @"C:\Users\jealb\OneDrive\Escritorio\Proyecto3.txt";
                     int contadorActions = 0;
                     using (StreamReader lector = new StreamReader(arg))
                     {
@@ -758,7 +758,7 @@ namespace LenguajesFase1
                                             {
                                                 comillas.Replace("'", "\\"+"'");
                                             }
-                                            if (comillas.Contains('"'))
+                                            if (comillas.Contains('\"'))
                                             {
                                                 comillas.Replace("\"", "\\" + "\"");
                                             }
