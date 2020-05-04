@@ -277,7 +277,15 @@ namespace LenguajesFase1
                     transi += x + ",";
                 }
                 transi = transi.Trim(',');
-                followsTransiciones.Add(transi);
+                var ordenar = transi.Split(',').ToList();
+                ordenar.Sort();
+                string aux = "";
+                foreach (var x in ordenar)
+                {
+                    aux += x + ",";
+                }
+                aux = aux.Trim(',');
+                followsTransiciones.Add(aux);
 
             }
             return followsTransiciones;

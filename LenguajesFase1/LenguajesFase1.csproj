@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Automata.cs" />
     <Compile Include="ErrorVerificado.cs" />
     <Compile Include="Nodo.cs" />
     <Compile Include="Program.cs" />
