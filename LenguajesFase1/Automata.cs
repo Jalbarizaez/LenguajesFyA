@@ -75,7 +75,7 @@ namespace LenguajesFase1
                 
                 writer.WriteLine("                  var temp= vectorPalabras[i];");
                 writer.WriteLine("                  if (temp.Length != 0)");
-                writer.WriteLine("                  Resultado = true;");
+                writer.WriteLine("                  {Resultado = true;");
                 writer.WriteLine("                  var estado_temporal = 0;");
                 writer.WriteLine("                  {");
                 writer.WriteLine("                  for(int j=0; j < temp.Length; j++) ");
@@ -173,6 +173,7 @@ namespace LenguajesFase1
                 writer.WriteLine("                  }");
                 writer.WriteLine("                      evaluar.Clear();");
                 writer.WriteLine("                 }");
+                writer.WriteLine("                }");
                 writer.WriteLine("              }");
                 writer.WriteLine("              return Resultado;");
                 writer.WriteLine("          }");
