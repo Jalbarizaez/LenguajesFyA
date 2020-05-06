@@ -21,8 +21,8 @@ namespace LenguajesFase1
         public static List<string> Terminales = new List<string>();
         public static void EscribirNuevaSolucion()
         {
-
-            using (var writer = new StreamWriter(@"C:\Users\jealb\OneDrive\Escritorio\Compilar\Compilar\Program.cs"))
+            var direccion = Directory.GetCurrentDirectory();
+            using (var writer = new StreamWriter(@"C:\Users\jealb\OneDrive\Escritorio\LenguajesFase1\LenguajesFase1\bin\Debug\Compilar\Compilar\Program.cs"))
             {
                 writer.WriteLine("using System;");
                 writer.WriteLine("using System.Collections.Generic;");
